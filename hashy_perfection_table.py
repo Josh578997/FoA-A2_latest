@@ -29,16 +29,23 @@ class HashyPerfectionTable(Generic[K, V]):
         """
         self.array: ArrayR[Union[tuple[K, V], None]] = ArrayR(13)
         self.count: int = 0
-
+        self.table_size = 13
     def hash(self, key: K) -> int:
         """
         Hash a key for insert/retrieve/update into the hashtable.
 
         Complexity:
-        Best Case Complexity:
-        Worst Case Complexity:
+        Best Case Complexity: O(opp), where opp is the cost of operations
+        Worst Case Complexity: O(l), where l is the length of the key
         """
-        raise NotImplementedError
+        hashy = 0
+        hash_base = 53
+        offset = 89
+        for i,char in enumerate(key):
+            hashy += ((ord(char)+len(key))*(hash_base**i))%offset
+        hashy%=self.table_size
+        return hashy
+
 
     def __len__(self) -> int:
         """

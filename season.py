@@ -1,6 +1,8 @@
 from __future__ import annotations
 from data_structures.bset import BSet
 from data_structures.referential_array import ArrayR
+from data_structures.linked_list import LinkedList
+from algorithms import mergesort
 from dataclasses import dataclass
 from team import Team
 from typing import Generator, Union
@@ -94,7 +96,17 @@ class Season:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        self.leaderboard = LinkedList()
+        for team in teams:
+            self.leaderboard.append(team)
+        for i in range(len(self.leaderboard)-1):
+            for j in range(i+1,len(self.leaderboard)):
+                if self.leaderboard[i].name > self.leaderboard[j].name:
+                    temp = self.leaderboard[i]
+                    self.leaderboard[i] = self.leaderboard[j]
+                    self.leaderboard[j] = temp
+
+
 
     def _generate_schedule(self) -> ArrayR[ArrayR[Game]]:
         """

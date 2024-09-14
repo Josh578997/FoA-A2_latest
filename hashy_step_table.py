@@ -72,7 +72,16 @@ class HashyStepTable(Generic[K, V]):
         Best Case Complexity:
         Worst Case Complexity:
         """
-        raise NotImplementedError
+        step = 0
+        hash_base = 53
+        offset = 89
+        for i,char in enumerate(key):
+            step+= ((ord(char)+len(key))*(hash_base**i))%offset*4
+        step%=self.table_size
+        if step >= 5:
+            step%= 5
+        return step
+
 
     @property
     def table_size(self) -> int:
@@ -98,9 +107,20 @@ class HashyStepTable(Generic[K, V]):
         """
         # Initial position
         position = self.hash(key)
+        step_size = self.hash2(key)
 
-        # Custom logic to be implemented here
-        raise NotImplementedError
+        for _ in range(0,self.table_size,step_size):
+            if self.array[position] is None:
+                # Empty spot. Am I upserting or retrieving?
+                if is_insert:
+                    return position
+                else:
+                    raise KeyError(key)
+            elif self.array[position][0] == key:
+                return position
+            else:
+                # Taken by something else. Time to linear probe.
+                position = (position + 1) % self.table_size
     
     def keys(self) -> list[K]:
         """
