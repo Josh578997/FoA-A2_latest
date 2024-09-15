@@ -205,7 +205,7 @@ class Season:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        self.schedule.delete_at_index[0]
+        self.schedule.delete_at_index(0)
         return self.schedule[0]
 
     def get_leaderboard(self) -> ArrayR[ArrayR[Union[int, str]]]:
