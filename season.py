@@ -204,6 +204,8 @@ class Season:
             Best Case Complexity:
             Worst Case Complexity:
         """
+        if self.schedule[0] == None:
+            return None
         self.schedule.delete_at_index(0)
         yield self.schedule[0]
 
