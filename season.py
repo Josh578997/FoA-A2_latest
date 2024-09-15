@@ -97,6 +97,8 @@ class Season:
             Worst Case Complexity:
         """
         self.leaderboard = LinkedList()
+        self.teams = teams
+    
         for team in teams:
             self.leaderboard.append(team)
         for i in range(len(self.leaderboard)-1):
@@ -106,7 +108,10 @@ class Season:
                     self.leaderboard[i] = self.leaderboard[j]
                     self.leaderboard[j] = temp
 
-
+        self.schedule = LinkedList()
+        schedule_array = self._generate_schedule()
+        for week in schedule_array:
+            self.schedule.append(week)
 
     def _generate_schedule(self) -> ArrayR[ArrayR[Game]]:
         """
@@ -180,7 +185,13 @@ class Season:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        temp = self.schedule[orig_week-1]
+        if isinstance(new_week,int):
+            self.schedule.delete_at_index(orig_week-1)
+            self.schedule.insert(new_week,temp)
+        elif new_week == None:
+            self.schedule.delete_at_index(orig_week-1)
+            self.schedule.append(temp)
 
     def get_next_game(self) -> Union[Generator[Game], None]:
         """
@@ -194,7 +205,8 @@ class Season:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        self.schedule.delete_at_index[0]
+        return self.schedule[0]
 
     def get_leaderboard(self) -> ArrayR[ArrayR[Union[int, str]]]:
         """
@@ -230,7 +242,7 @@ class Season:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        return self.teams
 
     def __len__(self) -> int:
         """
