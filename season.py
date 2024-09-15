@@ -112,7 +112,6 @@ class Season:
         schedule_array = self._generate_schedule()
         for week in schedule_array:
             self.schedule.append(week)
-
     def _generate_schedule(self) -> ArrayR[ArrayR[Game]]:
         """
         Generates a schedule by generating all possible games between the teams.
@@ -206,7 +205,7 @@ class Season:
             Worst Case Complexity:
         """
         self.schedule.delete_at_index(0)
-        return self.schedule[0]
+        yield self.schedule[0]
 
     def get_leaderboard(self) -> ArrayR[ArrayR[Union[int, str]]]:
         """
@@ -267,7 +266,7 @@ class Season:
         Complexity:
             Analysis not required.
         """
-        return ""
+        return f'Schedule: {str(self.schedule)}'
 
     def __repr__(self) -> str:
         """Returns a string representation of the Season object.
