@@ -6,6 +6,8 @@ from algorithms import mergesort
 from dataclasses import dataclass
 from team import Team
 from typing import Generator, Union
+from game_simulator import GameSimulator
+from constants import TeamStats,GameResult,PlayerStats,PlayerPosition,Constants,ResultStats
 
 
 @dataclass
@@ -93,8 +95,8 @@ class Season:
             teams (ArrayR[Team]): The teams played in this season.
 
         Complexity:
-            Best Case Complexity:
-            Worst Case Complexity:
+            Best Case Complexity: O(S), S is the length of the schedule array
+            Worst Case Complexity: O(N^2+S), N is the number of the teams in the season, S is the length of the schedule array
         """
         self.leaderboard = LinkedList()
         self.teams = teams
@@ -112,7 +114,6 @@ class Season:
         schedule_array = self._generate_schedule()
         for week in schedule_array:
             self.schedule.append(week)
-
     def _generate_schedule(self) -> ArrayR[ArrayR[Game]]:
         """
         Generates a schedule by generating all possible games between the teams.
@@ -171,7 +172,31 @@ class Season:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        for week in self.schedule:
+            for game in week:
+                #updating results values
+                results = GameSimulator.simulate(game.home_team,game.away_team)
+                if results[ResultStats.HOME_GOALS.value]>results[ResultStats.AWAY_GOALS.value]:
+                    game.home_team.statistics[TeamStats.WINS.value] += GameResult.WIN.value
+                    game.away_team.statistics[TeamStats.LOSSES.value] += GameResult.LOSS.value
+                elif results[ResultStats.HOME_GOALS.value]==results[ResultStats.AWAY_GOALS.value]:
+                    game.home_team.statistics[TeamStats.DRAWS.value] += GameResult.DRAW.value
+                    game.away_team.statistics[TeamStats.DRAWS.value] += GameResult.DRAW.value
+                else:
+                    game.home_team.statistics[TeamStats.LOSSES.value] += GameResult.LOSS.value
+                    game.away_team.statistics[TeamStats.WINS.value] += GameResult.WIN.value
+
+                #updating goals for/against
+                game.home_team.statistics[TeamStats.GOALS_FOR.value] += results[ResultStats.HOME_GOALS.value]
+                game.home_team.statistics[TeamStats.GOALS_AGAINST.value] += results[ResultStats.AWAY_GOALS.value]
+                game.away_team.statistics[TeamStats.GOALS_FOR.value] += results[ResultStats.AWAY_GOALS.value]
+                game.away_team.statistics[TeamStats.GOALS_AGAINST.value] += results[ResultStats.HOME_GOALS.value]
+
+                #updating games played
+                game.home_team.statistics[TeamStats.GAMES_PLAYED.value] += 1
+                game.away_team.statistics[TeamStats.GAMES_PLAYED.value] += 1 
+
+                #updating player stats
 
     def delay_week_of_games(self, orig_week: int, new_week: Union[int, None] = None) -> None:
         """
@@ -182,8 +207,8 @@ class Season:
             new_week (Union[int, None]): The new week to move the games to. If this is None, it moves the games to the end of the season.
 
         Complexity:
-            Best Case Complexity:
-            Worst Case Complexity:
+            Best Case Complexity: O(1)
+            Worst Case Complexity: O(N), N is the length of the schedule linked list
         """
         temp = self.schedule[orig_week-1]
         if isinstance(new_week,int):
@@ -202,8 +227,8 @@ class Season:
             or None if there are no more games left.
 
         Complexity:
-            Best Case Complexity:
-            Worst Case Complexity:
+            Best Case Complexity: O(1)
+            Worst Case Complexity: O(1)
         """
         iter(self.schedule)
         return next(self.schedule)
@@ -239,8 +264,8 @@ class Season:
             PlayerPosition (ArrayR(Team)): The teams participating in the season.
 
         Complexity:
-            Best Case Complexity:
-            Worst Case Complexity:
+            Best Case Complexity: O(1)
+            Worst Case Complexity: O(1)
         """
         return self.teams
 
@@ -249,10 +274,10 @@ class Season:
         Returns the number of teams in the season.
 
         Complexity:
-            Best Case Complexity:
-            Worst Case Complexity:
+            Best Case Complexity: O(1)
+            Worst Case Complexity: O(1)
         """
-        raise NotImplementedError
+        return len(self.teams)
 
     def __str__(self) -> str:
         """
@@ -267,7 +292,7 @@ class Season:
         Complexity:
             Analysis not required.
         """
-        return ""
+        return f'Schedule: {str(self.schedule)}'
 
     def __repr__(self) -> str:
         """Returns a string representation of the Season object.
