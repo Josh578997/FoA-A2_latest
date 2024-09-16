@@ -197,6 +197,34 @@ class Season:
                 game.away_team.statistics[TeamStats.GAMES_PLAYED.value] += 1 
 
                 #updating player stats
+                for player_list in [game.home_team.get_players(), game.away_team.get_players()]:
+                    for player in player_list:
+                        player.statistics[PlayerStats.GAMES_PLAYED.value] += 1
+                        if results[ResultStats.GOAL_SCORERS.value] == None:
+                            pass
+                        elif player.name in results[ResultStats.GOAL_SCORERS.value]:
+                            for player_name in results[ResultStats.GOAL_SCORERS.value]:
+                                if player_name == player.name:
+                                    player.statistics[PlayerStats.GOALS.value] += 1
+                        if results[ResultStats.GOAL_ASSISTS.value] == None:
+                            pass
+                        elif player.name in results[ResultStats.GOAL_ASSISTS.value]:
+                            for player_name in results[ResultStats.GOAL_ASSISTS.value]:
+                                if player_name == player.name:
+                                    player.statistics[PlayerStats.ASSISTS.value] += 1
+                        if results[ResultStats.INTERCEPTIONS.value] == None:
+                            pass
+                        elif player.name in results[ResultStats.INTERCEPTIONS.value]:
+                            for player_name in results[ResultStats.INTERCEPTIONS.value]:
+                                if player_name == player.name:
+                                    player.statistics[PlayerStats.INTERCEPTIONS.value] += 1
+                        if results[ResultStats.TACKLES.value]==None:
+                            pass
+                        elif player.name in results[ResultStats.TACKLES.value]:
+                            for player_name in results[ResultStats.TACKLES.value]:
+                                if player_name == player.name:
+                                    player.statistics[PlayerStats.TACKLES.value] += 1
+                        
 
     def delay_week_of_games(self, orig_week: int, new_week: Union[int, None] = None) -> None:
         """
