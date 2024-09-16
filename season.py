@@ -188,7 +188,7 @@ class Season:
         temp = self.schedule[orig_week-1]
         if isinstance(new_week,int):
             self.schedule.delete_at_index(orig_week-1)
-            self.schedule.insert(new_week,temp)
+            self.schedule.insert(new_week-1,temp)
         elif new_week == None:
             self.schedule.delete_at_index(orig_week-1)
             self.schedule.append(temp)
@@ -205,8 +205,8 @@ class Season:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        self.schedule.delete_at_index(0)
-        return self.schedule[0]
+        iter(self.schedule)
+        return next(self.schedule)
 
     def get_leaderboard(self) -> ArrayR[ArrayR[Union[int, str]]]:
         """
