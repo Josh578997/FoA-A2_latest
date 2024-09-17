@@ -8,6 +8,7 @@ from team import Team
 from typing import Generator, Union
 from game_simulator import GameSimulator
 from constants import TeamStats,GameResult,PlayerStats,PlayerPosition,Constants,ResultStats
+from data_structures.array_sorted_list import ArraySortedList
 
 
 @dataclass
@@ -98,18 +99,17 @@ class Season:
             Best Case Complexity: O(S), S is the length of the schedule array
             Worst Case Complexity: O(N^2+S), N is the number of the teams in the season, S is the length of the schedule array
         """
-        self.leaderboard = LinkedList()
+        
         self.teams = teams
-    
+        self.leaderboard = ArraySortedList(len(teams))
         for team in teams:
-            self.leaderboard.append(team)
-        for i in range(len(self.leaderboard)-1):
-            for j in range(i+1,len(self.leaderboard)):
-                if self.leaderboard[i].name > self.leaderboard[j].name:
-                    temp = self.leaderboard[i]
-                    self.leaderboard[i] = self.leaderboard[j]
-                    self.leaderboard[j] = temp
-
+            self.leaderboard.add(team)
+        # for i in range(len(self.leaderboard)-1):
+        #     for j in range(i+1,len(self.leaderboard)):
+        #         if self.leaderboard[i].name > self.leaderboard[j].name:
+        #             temp = self.leaderboard[i]
+        #             self.leaderboard[i] = self.leaderboard[j]
+        #             self.leaderboard[j] = temp
         self.schedule = LinkedList()
         schedule_array = self._generate_schedule()
         for week in schedule_array:
@@ -224,7 +224,11 @@ class Season:
                             for player_name in results[ResultStats.TACKLES.value]:
                                 if player_name == player.name:
                                     player.statistics[PlayerStats.TACKLES.value] += 1
-                        
+                # re initialize leaderboard to get values in right order;
+                temp_list = self.leaderboard
+                self.leaderboard = ArraySortedList(len(self.teams))
+                for team in temp_list:
+                    self.leaderboard.add(team)
 
     def delay_week_of_games(self, orig_week: int, new_week: Union[int, None] = None) -> None:
         """

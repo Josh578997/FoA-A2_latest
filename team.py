@@ -274,7 +274,18 @@ class Team:
         for position in self.players.values():
             totallength += len(position)
         return totallength
-
+    def __lt__(self,other:Team) -> bool:
+        conditions = [TeamStats.POINTS.value, TeamStats.GOALS_DIFFERENCE.value,TeamStats.GOALS_FOR.value]
+        for cond in conditions:
+            if self.statistics[cond] != other.statistics[cond]:
+                return not (self.statistics[cond] < other.statistics[cond])
+        return (self.name < other.name)
+    def __gt__(self,other:Team)->bool:
+        conditions = [TeamStats.POINTS.value, TeamStats.GOALS_DIFFERENCE.value,TeamStats.GOALS_FOR.value]
+        for cond in conditions:
+            if self.statistics[cond] != other.statistics[cond]:
+                return not (self.statistics[cond] > other.statistics[cond])
+        return (self.name > other.name)
     def __str__(self) -> str:
         """
         Optional but highly recommended.
