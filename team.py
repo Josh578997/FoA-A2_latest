@@ -259,7 +259,7 @@ class Team:
             Best Case Complexity: O(1)
             Worst Case Complexity: O(1)
         """
-        return self.statistics[statistic]
+        return self.statistics[statistic.value]
 
     def __len__(self) -> int:
         """

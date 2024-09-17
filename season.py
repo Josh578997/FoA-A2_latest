@@ -169,28 +169,28 @@ class Season:
             Assume simulate_game is O(1)
             Remember to define your variables and their complexity.
 
-            Best Case Complexity:
-            Worst Case Complexity:
+            Best Case Complexity: O(W*G), W is the number of weeks and G is the number of games in a week
+            Worst Case Complexity: O(W*G+P), W is the number of weeks, G is the number of games in a week, P is the number of players in a team
         """
         for week in self.schedule:
             for game in week:
                 #updating results values
                 results = GameSimulator.simulate(game.home_team,game.away_team)
                 if results[ResultStats.HOME_GOALS.value]>results[ResultStats.AWAY_GOALS.value]:
-                    game.home_team[TeamStats.WINS.value] = game.home_team.statistics[TeamStats.WINS.value] + 1
-                    game.away_team[TeamStats.LOSSES.value] += 1
+                    game.home_team[TeamStats.WINS] = game.home_team.statistics[TeamStats.WINS.value] + 1
+                    game.away_team[TeamStats.LOSSES] += 1
                 elif results[ResultStats.HOME_GOALS.value]==results[ResultStats.AWAY_GOALS.value]:
-                    game.home_team[TeamStats.DRAWS.value] += 1
-                    game.away_team[TeamStats.DRAWS.value] += 1
+                    game.home_team[TeamStats.DRAWS] += 1
+                    game.away_team[TeamStats.DRAWS] += 1
                 else:
-                    game.home_team[TeamStats.LOSSES.value] += 1
-                    game.away_team[TeamStats.WINS.value] += 1
+                    game.home_team[TeamStats.LOSSES] += 1
+                    game.away_team[TeamStats.WINS] += 1
 
                 #updating goals for/against
-                game.home_team[TeamStats.GOALS_FOR.value] += results[ResultStats.HOME_GOALS.value]
-                game.home_team[TeamStats.GOALS_AGAINST.value] += results[ResultStats.AWAY_GOALS.value]
-                game.away_team[TeamStats.GOALS_FOR.value] += results[ResultStats.AWAY_GOALS.value]
-                game.away_team[TeamStats.GOALS_AGAINST.value] += results[ResultStats.HOME_GOALS.value]
+                game.home_team[TeamStats.GOALS_FOR] += results[ResultStats.HOME_GOALS.value]
+                game.home_team[TeamStats.GOALS_AGAINST] += results[ResultStats.AWAY_GOALS.value]
+                game.away_team[TeamStats.GOALS_FOR] += results[ResultStats.AWAY_GOALS.value]
+                game.away_team[TeamStats.GOALS_AGAINST] += results[ResultStats.HOME_GOALS.value]
 
                 # #updating games played
                 # game.home_team[TeamStats.GAMES_PLAYED.value] += 1

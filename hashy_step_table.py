@@ -97,8 +97,8 @@ class HashyStepTable(Generic[K, V]):
         FullError: When a table is full and cannot be inserted.
 
         Complexity:
-        Best Case Complexity:
-        Worst Case Complexity:
+        Best Case Complexity: O(1)
+        Worst Case Complexity: O(n), where n is the number of items in the table
         """
         """
         This is made more general for use in later classes.
