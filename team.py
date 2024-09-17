@@ -226,8 +226,7 @@ class Team:
             Worst Case Complexity: O(comp^2), comp is cost of comparison
         """
         self.statistics[statistic] = value
-        if statistic in [TeamStats.WINS,TeamStats.DRAWS,TeamStats.LOSSES]:
-            self.statistics[TeamStats.GAMES_PLAYED.value] += 1
+        if statistic in [TeamStats.WINS.value,TeamStats.DRAWS.value,TeamStats.LOSSES.value]:
             if statistic == TeamStats.WINS.value:
                 self.statistics[TeamStats.POINTS.value] +=  GameResult.WIN.value
                 self.statistics[TeamStats.LAST_FIVE_RESULTS.value].append(GameResult.WIN)
@@ -235,7 +234,7 @@ class Team:
                 self.statistics[TeamStats.POINTS.value] += GameResult.DRAW.value
                 self.statistics[TeamStats.LAST_FIVE_RESULTS.value].append(GameResult.DRAW)
             elif statistic == TeamStats.LOSSES.value:
-                self.statistics[TeamStats.POINTS.value] += GameResult.Loss.value
+                self.statistics[TeamStats.POINTS.value] += GameResult.LOSS.value
                 self.statistics[TeamStats.LAST_FIVE_RESULTS.value].append(GameResult.LOSS)
         if len(self.statistics[TeamStats.LAST_FIVE_RESULTS.value]) > 5:
             self.statistics[TeamStats.LAST_FIVE_RESULTS.value].serve()
