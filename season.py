@@ -177,20 +177,20 @@ class Season:
                 #updating results values
                 results = GameSimulator.simulate(game.home_team,game.away_team)
                 if results[ResultStats.HOME_GOALS.value]>results[ResultStats.AWAY_GOALS.value]:
-                    game.home_team.statistics[TeamStats.WINS.value] += GameResult.WIN.value
-                    game.away_team.statistics[TeamStats.LOSSES.value] += GameResult.LOSS.value
+                    game.home_team.statistics[TeamStats.WINS.value] = game.home_team.statistics[TeamStats.WINS.value] + 1
+                    game.away_team.statistics[TeamStats.LOSSES.value] += 1
                 elif results[ResultStats.HOME_GOALS.value]==results[ResultStats.AWAY_GOALS.value]:
-                    game.home_team.statistics[TeamStats.DRAWS.value] += GameResult.DRAW.value
-                    game.away_team.statistics[TeamStats.DRAWS.value] += GameResult.DRAW.value
+                    game.home_team.statistics[TeamStats.DRAWS.value] += 1
+                    game.away_team.statistics[TeamStats.DRAWS.value] += 1
                 else:
-                    game.home_team.statistics[TeamStats.LOSSES.value] += GameResult.LOSS.value
-                    game.away_team.statistics[TeamStats.WINS.value] += GameResult.WIN.value
+                    game.home_team.statistics[TeamStats.LOSSES.value] += 1
+                    game.away_team.statistics[TeamStats.WINS.value] += 1
 
                 #updating goals for/against
-                game.home_team.statistics[TeamStats.GOALS_FOR.value] += results[ResultStats.HOME_GOALS.value]
-                game.home_team.statistics[TeamStats.GOALS_AGAINST.value] += results[ResultStats.AWAY_GOALS.value]
-                game.away_team.statistics[TeamStats.GOALS_FOR.value] += results[ResultStats.AWAY_GOALS.value]
-                game.away_team.statistics[TeamStats.GOALS_AGAINST.value] += results[ResultStats.HOME_GOALS.value]
+                game.home_team[TeamStats.GOALS_FOR.value] += results[ResultStats.HOME_GOALS.value]
+                game.home_team[TeamStats.GOALS_AGAINST.value] += results[ResultStats.AWAY_GOALS.value]
+                game.away_team[TeamStats.GOALS_FOR.value] += results[ResultStats.AWAY_GOALS.value]
+                game.away_team[TeamStats.GOALS_AGAINST.value] += results[ResultStats.HOME_GOALS.value]
 
                 #updating games played
                 game.home_team.statistics[TeamStats.GAMES_PLAYED.value] += 1
@@ -288,13 +288,15 @@ class Season:
         team_stats_list = []
         for stat in TeamStats:
             team_stats_list.append(stat.value)
-        for i in range(len(self.leaderboard)):
+        for i in range(len(self.leaderboard)-1):
             team_array = ArrayR(len(TeamStats)+1)
-            team_array[0] == self.leaderboard[i].name
+            team_array[0] = self.leaderboard[i].get_name()
             for j in range(len(TeamStats)-1):
+                print(self.leaderboard[i].statistics[team_stats_list[j]])
                 team_array[j+1] = self.leaderboard[i].statistics[team_stats_list[j]]
             team_array[len(team_array)-1] = self.leaderboard[i].get_last_five_results()
             outer_array[i] = team_array
+            print(team_array)
         return outer_array
         
 

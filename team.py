@@ -226,23 +226,21 @@ class Team:
             Worst Case Complexity: O(comp^2), comp is cost of comparison
         """
         self.statistics[statistic.value] = value
-
         if statistic in [TeamStats.WINS,TeamStats.DRAWS,TeamStats.LOSSES]:
             self.statistics[TeamStats.GAMES_PLAYED.value] += 1
             if statistic == TeamStats.WINS:
-                self.statistics[TeamStats.POINTS.value] += GameResult.WIN.value
+                self.statistics[TeamStats.POINTS.value] = self.statistics[TeamStats.POINTS.value] +  GameResult.WIN.value
                 self.statistics[TeamStats.LAST_FIVE_RESULTS.value].append(GameResult.WIN)
             elif statistic == TeamStats.DRAWS:
-                self.statistics[TeamStats.POINTS.value] += GameResult.DRAW.value
+                self.statistics[TeamStats.POINTS.value] = self.statistics[TeamStats.POINTS.value] + GameResult.DRAW.value
                 self.statistics[TeamStats.LAST_FIVE_RESULTS.value].append(GameResult.DRAW)
             elif statistic == TeamStats.LOSSES:
-                self.statistics[TeamStats.POINTS.value] += GameResult.LOSS.value
+                self.statistics[TeamStats.POINTS.value] = self.statistics[TeamStats.POINTS.value] + GameResult.Loss.value
                 self.statistics[TeamStats.LAST_FIVE_RESULTS.value].append(GameResult.LOSS)
         if len(self.statistics[TeamStats.LAST_FIVE_RESULTS.value]) > 5:
             self.statistics[TeamStats.LAST_FIVE_RESULTS.value].serve()
-        if statistic in [TeamStats.GOALS_FOR,TeamStats.GOALS_AGAINST]:
-            self.statistics[TeamStats.GOALS_DIFFERENCE.value] = self.statistics[TeamStats.GOALS_FOR.value] - self.statistics[TeamStats.GOALS_AGAINST.value]
-        
+        #if statistic in [TeamStats.GOALS_FOR,TeamStats.GOALS_AGAINST]:
+        self.statistics[TeamStats.GOALS_DIFFERENCE.value] = self.statistics[TeamStats.GOALS_FOR.value] - self.statistics[TeamStats.GOALS_AGAINST.value]
 
     def __getitem__(self, statistic: TeamStats) -> int:
         """
@@ -261,7 +259,7 @@ class Team:
             Best Case Complexity: O(1)
             Worst Case Complexity: O(1)
         """
-        return self.statistics[statistic.value]
+        return self.statistics[statistic]
 
     def __len__(self) -> int:
         """
@@ -291,7 +289,7 @@ class Team:
         Complexity:
             Analysis not required.
         """
-        return 
+        return f"{self.name}"
 
     def __repr__(self) -> str:
         """Returns a string representation of the Team object.
