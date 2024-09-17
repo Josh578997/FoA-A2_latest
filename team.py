@@ -225,15 +225,16 @@ class Team:
             Best Case Complexity: O(comp), comp is cost of comparison
             Worst Case Complexity: O(comp^2), comp is cost of comparison
         """
-        self.statistics[statistic] = value
-        if statistic in [TeamStats.WINS.value,TeamStats.DRAWS.value,TeamStats.LOSSES.value]:
-            if statistic == TeamStats.WINS.value:
+        self.statistics[statistic.value] = value
+        if statistic.value in [TeamStats.WINS.value,TeamStats.DRAWS.value,TeamStats.LOSSES.value]:
+            self.statistics[TeamStats.GAMES_PLAYED.value]+=1
+            if statistic.value == TeamStats.WINS.value:
                 self.statistics[TeamStats.POINTS.value] +=  GameResult.WIN.value
                 self.statistics[TeamStats.LAST_FIVE_RESULTS.value].append(GameResult.WIN)
-            elif statistic == TeamStats.DRAWS.value:
+            elif statistic.value == TeamStats.DRAWS.value:
                 self.statistics[TeamStats.POINTS.value] += GameResult.DRAW.value
                 self.statistics[TeamStats.LAST_FIVE_RESULTS.value].append(GameResult.DRAW)
-            elif statistic == TeamStats.LOSSES.value:
+            elif statistic.value == TeamStats.LOSSES.value:
                 self.statistics[TeamStats.POINTS.value] += GameResult.LOSS.value
                 self.statistics[TeamStats.LAST_FIVE_RESULTS.value].append(GameResult.LOSS)
         if len(self.statistics[TeamStats.LAST_FIVE_RESULTS.value]) > 5:
@@ -274,6 +275,7 @@ class Team:
         for position in self.players.values():
             totallength += len(position)
         return totallength
+    
     def __lt__(self,other:Team) -> bool:
         conditions = [TeamStats.POINTS.value, TeamStats.GOALS_DIFFERENCE.value,TeamStats.GOALS_FOR.value]
         for cond in conditions:

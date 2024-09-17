@@ -192,9 +192,9 @@ class Season:
                 game.away_team[TeamStats.GOALS_FOR.value] += results[ResultStats.AWAY_GOALS.value]
                 game.away_team[TeamStats.GOALS_AGAINST.value] += results[ResultStats.HOME_GOALS.value]
 
-                #updating games played
-                game.home_team[TeamStats.GAMES_PLAYED.value] += 1
-                game.away_team[TeamStats.GAMES_PLAYED.value] += 1 
+                # #updating games played
+                # game.home_team[TeamStats.GAMES_PLAYED.value] += 1
+                # game.away_team[TeamStats.GAMES_PLAYED.value] += 1 
 
                 #updating player stats
                 for player_list in [game.home_team.get_players(), game.away_team.get_players()]:

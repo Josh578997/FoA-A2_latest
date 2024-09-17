@@ -47,6 +47,7 @@ class HashyStepTable(Generic[K, V]):
         self.size_index = 0
         self.array: ArrayR[Union[tuple[K, V], None]] = ArrayR(self.TABLE_SIZES[self.size_index])
         self.count = 0
+        self.sentinel = "DELETED"
 
     def hash(self, key: K) -> int:
         """
@@ -71,15 +72,9 @@ class HashyStepTable(Generic[K, V]):
         Complexity:
         Best Case Complexity:
         Worst Case Complexity:
+
         """
-        step = 0
-        hash_base = 53
-        offset = 89
-        for i,char in enumerate(key):
-            step+= ((ord(char)+len(key))*(hash_base**i))%offset*4
-        step%=self.table_size
-        if step >= 5:
-            step%= 5
+        step = (((ord(key[0]) - ord("A"))) % (self.table_size-1)) + 1
         return step
 
 
@@ -105,22 +100,21 @@ class HashyStepTable(Generic[K, V]):
         Best Case Complexity:
         Worst Case Complexity:
         """
-        # Initial position
+        """
+        This is made more general for use in later classes.
+        """
         position = self.hash(key)
-        step_size = self.hash2(key)
-
-        for _ in range(0,self.table_size,step_size):
+        jump = self.hash2(key)
+        for _ in range(len(self.array)):
             if self.array[position] is None:
-                # Empty spot. Am I upserting or retrieving?
                 if is_insert:
+                    # If inserting, having None here is ok.
                     return position
-                else:
-                    raise KeyError(key)
+                raise KeyError(key)
             elif self.array[position][0] == key:
                 return position
             else:
-                # Taken by something else. Time to linear probe.
-                position = (position + 1) % self.table_size
+                position = (position + jump) % self.table_size
     
     def keys(self) -> list[K]:
         """
@@ -167,6 +161,8 @@ class HashyStepTable(Generic[K, V]):
         :raises KeyError: when the key doesn't exist.
         """
         position = self._hashy_probe(key, False)
+        if self.array[position][1] == self.sentinel:
+            raise KeyError
         return self.array[position][1]
 
     def __setitem__(self, key: K, data: V) -> None:
@@ -176,7 +172,6 @@ class HashyStepTable(Generic[K, V]):
         :complexity: See hashy probe.
         :raises FullError: when the table cannot be resized further.
         """
-
         position = self._hashy_probe(key, True)
 
         if self.array[position] is None:
@@ -189,14 +184,16 @@ class HashyStepTable(Generic[K, V]):
 
     def __delitem__(self, key: K) -> None:
         """
-        Deletes a (key, value) using lazy deletion
+        Deletes a (key, value) pair in our hash table.
 
-        Complexity:
-        Best Case Complexity:
-        Worst Case Complexity:
+        :complexity best: O(hash(key)) deleting item is not probed and in correct spot.
+        :complexity worst: O(N*hash(key)+N^2*comp(K)) deleting item is midway through large chain.
+        :raises KeyError: when the key doesn't exist.
         """
-        raise NotImplementedError
-
+        position = self._hashy_probe(key, False)
+        # Remove the element
+        self.array[position] = (key,self.sentinel)
+        self.count -=1
     def is_empty(self) -> bool:
         return self.count == 0
 
@@ -207,11 +204,21 @@ class HashyStepTable(Generic[K, V]):
         """
         Need to resize table and reinsert all values
 
-        Complexity:
-        Best Case Complexity:
-        Worst Case Complexity:
+        :complexity best: O(N*hash(K)) No probing.
+        :complexity worst: O(N*hash(K) + N^2*comp(K)) Lots of probing.
+        Where N is len(self)
         """
-        raise NotImplementedError
+        old_array = self.array
+        self.size_index += 1
+        if self.size_index == len(self.TABLE_SIZES):
+            # Cannot be resized further.
+            return
+        self.array = ArrayR(self.TABLE_SIZES[self.size_index])
+        self.count = 0
+        for item in old_array:
+            if item is not None:
+                key, value = item
+                self[key] = value
 
     def __str__(self) -> str:
         """
