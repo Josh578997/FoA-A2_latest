@@ -8,6 +8,7 @@ from data_structures.linked_queue import LinkedQueue
 from constants import GameResult, PlayerPosition, PlayerStats, TeamStats, Constants
 from player import Player
 from typing import Collection, Union, TypeVar
+from hashy_step_table import HashyStepTable
 
 T = TypeVar("T")
 
@@ -34,11 +35,11 @@ class Team:
         Team.count += 1             #increments the class count by 1 every time an instance of the Team object 
         self.number = Team.count    #is initialised and assigns it to that initialisation.
         self.name = team_name
-        self.statistics = LinearProbeTable()
+        self.statistics = HashyStepTable()
         for stat in TeamStats:
             self.statistics[stat.value] = 0
         self.statistics[TeamStats.LAST_FIVE_RESULTS.value] = LinkedQueue()
-        self.players = HashTableSeparateChaining()
+        self.players = HashyStepTable()
         for position in PlayerPosition:
             self.players[position.value] = LinkedList()
         for player in players:

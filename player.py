@@ -1,7 +1,7 @@
 from __future__ import annotations
 from constants import PlayerPosition, PlayerStats
 from data_structures.hash_table import LinearProbeTable
-
+from hashy_perfection_table import HashyPerfectionTable
 class Player:
 
     def __init__(self, name: str, position: PlayerPosition, age: int) -> None:
@@ -24,7 +24,7 @@ class Player:
         self.name = name
         self.position = position
         self.age = age
-        self.statistics = LinearProbeTable()
+        self.statistics = HashyPerfectionTable()
 
         for stat in PlayerStats:
             self.statistics[stat.value] = 0
